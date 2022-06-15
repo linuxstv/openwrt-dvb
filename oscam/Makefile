@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2016-2017 Tomasz Maciej Nowak <tomek_n@o2.pl>
+# Copyright (C) 2016-2018 Tomasz Maciej Nowak <tomek_n@o2.pl>
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -7,14 +7,13 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME := oscam
-PKG_REV := 11398
+PKG_REV := 11532
 PKG_VERSION := 1.20-$(PKG_REV)
 PKG_RELEASE := 1
 
 PKG_SOURCE_PROTO := svn
 PKG_SOURCE_VERSION := $(PKG_REV)
 PKG_SOURCE_URL := http://www.streamboard.tv/svn/oscam/trunk
-#PKG_SOURCE_URL := http://www.oscam.cc/svn/oscam-mirror/trunk
 
 PKG_LICENSE := GPL-3.0
 PKG_LICENSE_FILE := COPYING
@@ -78,6 +77,7 @@ CONFIGURE_ARGS = \
 	$(if $(CONFIG_OSCAM_MODULE_PANDORA),--enable,--disable) MODULE_PANDORA \
 	$(if $(CONFIG_OSCAM_MODULE_GHTTP),--enable,--disable) MODULE_GHTTP \
 	$(if $(CONFIG_OSCAM_READER_NAGRA),--enable,--disable) READER_NAGRA \
+	$(if $(CONFIG_OSCAM_READER_NAGRA_MERLIN),--enable,--disable) READER_NAGRA_MERLIN \
 	$(if $(CONFIG_OSCAM_READER_IRDETO),--enable,--disable) READER_IRDETO \
 	$(if $(CONFIG_OSCAM_READER_CONAX),--enable,--disable) READER_CONAX \
 	$(if $(CONFIG_OSCAM_READER_CRYPTOWORKS),--enable,--disable) READER_CRYPTOWORKS \
@@ -120,6 +120,7 @@ ifeq ($(CONFIG_OSCAM_WITH_SSL),y)
 endif
 
 MAKE_FLAGS += \
+	SVN_REV=$(PKG_REV) \
 	CONF_DIR=/etc/oscam \
 	OSCAM_BIN=Distribution/oscam \
 	LIST_SMARGO_BIN=Distribution/list-smargo
@@ -133,13 +134,13 @@ define Package/oscam/install
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/Distribution/oscam $(1)/usr/sbin/oscam
 
 	$(INSTALL_DIR) $(1)/etc/oscam
-	$(CP) $(PKG_BUILD_DIR)/Distribution/doc/example/* $(1)/etc/oscam/
+	$(INSTALL_CONF) ./files/oscam.conf $(1)/etc/oscam/oscam.conf
 
 	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_BIN) ./files/oscam.init $(1)/etc/init.d/oscam
 
 	$(INSTALL_DIR) $(1)/etc/config
-	$(INSTALL_CONF) ./files/oscam.conf $(1)/etc/config/oscam
+	$(INSTALL_CONF) ./files/oscam.config $(1)/etc/config/oscam
 endef
 
 define Package/list-smargo/install

@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2017 Tomasz Maciej Nowak <tomek_n@o2.pl>
+# Copyright (C) 2017-2018 Tomasz Maciej Nowak <tomek_n@o2.pl>
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -9,10 +9,10 @@ include $(TOPDIR)/rules.mk
 PKG_NAME := dvb-firmware
 PKG_RELEASE := 1
 
-PKG_SOURCE_DATE := 2017-01-23
+PKG_SOURCE_DATE := 2017-10-10
 PKG_SOURCE_PROTO := git
 PKG_SOURCE_URL := https://github.com/LibreELEC/dvb-firmware.git
-PKG_SOURCE_VERSION := c91bab0210ef74af0090e7bda121dd628f32511a
+PKG_SOURCE_VERSION := ac20a365c6df3af1a7c92a0195d443b8cf19cb9f
 
 PKG_MAINTAINER := Tomasz Maciej Nowak <tomek_n@o2.pl>
 
@@ -92,6 +92,31 @@ define Package/ngene-firmware/install
 		$(1)/lib/firmware
 endef
 $(eval $(call BuildPackage,ngene-firmware))
+
+
+Package/si2158-firmware = $(call Package/firmware-default,Silicon Labs Si2158)
+define Package/si2158-firmware/install
+	$(INSTALL_DIR) $(1)/lib/firmware
+	$(INSTALL_DATA) \
+		$(PKG_BUILD_DIR)/firmware/dvb-tuner-si2158-a20-01.fw \
+		$(1)/lib/firmware
+endef
+$(eval $(call BuildPackage,si2158-firmware))
+
+
+Package/si2168-firmware = $(call Package/firmware-default,Silicon Labs Si2168)
+define Package/si2168-firmware/install
+	$(INSTALL_DIR) $(1)/lib/firmware
+	$(INSTALL_DATA) \
+		$(PKG_BUILD_DIR)/firmware/dvb-demod-si2168-01.fw \
+		$(PKG_BUILD_DIR)/firmware/dvb-demod-si2168-02.fw \
+		$(PKG_BUILD_DIR)/firmware/dvb-demod-si2168-a20-01.fw \
+		$(PKG_BUILD_DIR)/firmware/dvb-demod-si2168-a30-01.fw \
+		$(PKG_BUILD_DIR)/firmware/dvb-demod-si2168-b40-01.fw \
+		$(PKG_BUILD_DIR)/firmware/dvb-demod-si2168-d60-01.fw \
+		$(1)/lib/firmware
+endef
+$(eval $(call BuildPackage,si2168-firmware))
 
 
 #$(eval $(call BuildPackage,dvb-firmware))
